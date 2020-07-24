@@ -92,31 +92,42 @@ class SortingRobot:
         """
         return self._light == "ON"
 
+        
+
     def sort(self):
         """
         Sort the robot's list.
         """
         self.set_light_on()
+        self.swap_item()
+
         while self.light_is_on():
-            self.compare_item()
-            if self.can_move_right() == False:
-                if self.compare_item() == 1: 
+            self.set_light_off() #start by turning it to false 
+            self.move_right()
+
+            #compare with the next number, swap it if it is smaller
+            #if there is anothewr n8umber, compare it to the foirst number. only swap if it's lower
+            while self.can_move_right():
+                if self.compare_item() == -1: 
                     self.swap_item()
-                    print(f"i cant go right anymore\n{self.compare_item()}")
-                    while self.can_move_left() == True:
-                        self.move_left()
-                elif self.compare_item() == None:
-                    self.set_light_off()
-            elif self.compare_item() == None:
+                self.move_right() 
+
+            #if there is n further number and its smaller, swap
+            while self.can_move_left():
+                if self.can_move_right() == False and self.compare_item() == -1:
+                    self.swap_item()
                 self.swap_item()
-                self.move_right()
-            elif self.compare_item() == -1:
-                self.move_right()
-            elif self.compare_item() == 0:
-                self.move_right()
-            elif self.compare_item() == 1:
-                self.swap_item()
-                self.move_right()
+
+            #if the current number is higher, swap and turn ligh on, else move left
+                if self.compare_item() == 1: #If the held item's value is greater,
+                    self.swap_item()
+                    self.set_light_on()
+                self.move_left()
+        #if its false move left and swap
+        while self.can_move_left():
+            self.move_left()  
+        self.swap_item()
+           
 
 
 if __name__ == "__main__":
